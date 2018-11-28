@@ -1,0 +1,145 @@
+const MIN_X = 0,
+      MAX_X = 500
+
+class App extends React.Component {
+  constructor(){
+    super()
+    this.state = {
+      colorMap: [
+        {color: '#0099f7', location: 0},
+        {color: '#8e58d3', location: 0.5},
+        {color: '#f2492b', location: 1}
+      ],
+      dragging: false,
+      currentColor: '',
+      rgb: [],
+      pos: 25
+    }
+  }
+  
+  componentDidMount(){
+    this.setState({
+      currentColor: this.getColorValue(
+        this.state.pos/MAX_X
+      )
+    })
+    //initial value
+  }
+  
+  componentWillMount() {
+    document.addEventListener('mousemove', this._handleMouseMove)
+    document.addEventListener('mouseup', this._handleMouseUp)
+  }
+  
+  _handleMouseDown = () =>{
+    this.setState({dragging: true})
+  }
+  
+  _handleMouseMove = (e) =>{
+    if(this.state.dragging){
+      let pos = this.state.pos + e.movementX
+      if(pos < MIN_X) pos = MIN_X
+      if(pos > MAX_X) pos = MAX_X
+      this.setState({
+        pos: pos,
+        currentColor: this.getColorValue(pos/MAX_X)
+      })
+    }
+  }
+  
+  _handleMouseUp = () =>{
+    this.setState({dragging: false})
+  }
+  
+  getColorValue = waypoint => {
+    //returns a color value based on percentage between two colors
+    
+    //find what two colors is the waypoint in between
+    let colorMap = this.state.colorMap
+    for (var index = 1; index <= colorMap.length - 1; index++) {
+      if (waypoint <= colorMap[index].location) {
+        break;
+      }
+    }
+    let color1 = this.HEXtoRGB(colorMap[index - 1].color)
+    let color2 = this.HEXtoRGB(colorMap[index].color)
+    let location1 = colorMap[index-1].location
+    let location2 = colorMap[index].location
+    //-->if there are more than 2 colors in the gradient map:
+    //1) calculate the range relative to the gradient locations between the two colors
+    //2) find the percentage/location of where the waypoint is within that range
+    let range = location2 - location1;
+    let waypointPerc = (waypoint - location1) / range;
+    let lower = 1 - waypointPerc;
+    let upper = waypointPerc;
+    
+    //then calculate the color value by mixing the two colors together
+    //--> the mixing value is depending on 'lower' and 'upper' value of the location
+    //example: at a location scale of 0 - 1, find the color value at location 0.75 between color RED and color GREEN. Therefore the result color will be a mixture of 75% of green and 25% of red
+
+    let rgb = [
+      Math.round(color1[0] * lower + color2[0] * upper),
+      Math.round(color1[1] * lower + color2[1] * upper),
+      Math.round(color1[2] * lower + color2[2] * upper)
+    ];
+    this.setState({
+      rgb: rgb
+    })
+    return this.RGBtoHEX(rgb);
+  };
+
+  
+  HEXtoRGB(color){
+    let hex = color;
+    hex = hex.replace("#", "");
+    let result = [
+      parseInt(hex.substring(0, 2), 16),
+      parseInt(hex.substring(2, 4), 16),
+      parseInt(hex.substring(4, 6), 16)
+    ];
+    return result;
+  }
+
+  RGBtoHEX(color){
+    let result = "#";
+    color.map(color => {
+      let hex = color.toString(16);
+      if (hex.length == 1) {
+        hex = "0" + hex;
+      }
+      result = result + hex;
+    });
+    return result;
+  }
+  
+  render() {
+    let pos = {
+      position: 'absolute',
+      left: this.state.pos
+    }
+    let color = {backgroundColor: this.state.currentColor}
+    return (<div className='container' style={color}>
+        <div className='pickerContainer'>
+      <div className='color'>
+        <div style={color}/>
+        <h1>{this.state.currentColor}</h1>
+      </div>
+      <div className='gradient'>
+          <div className='background'/>
+          <div style={pos} 
+              className='selectorContainer'
+               onMouseDown={this._handleMouseDown}>
+            <div className='selector'/>
+          </div>
+      </div>
+        <div className='pos'><h1>LOCATION: {parseFloat((this.state.pos/MAX_X).toFixed(2))}</h1>
+          <h1>RGB ({this.state.rgb[0]},{this.state.rgb[1]},{this.state.rgb[2]})</h1>
+        </div>
+        </div>
+        <p>made with react by <a href={'https://www.syli.me'} target='_blank'>shoe</a></p>
+    </div>)
+  }
+}
+
+React.render(<App/>, document.getElementById('app'));
+

@@ -1,0 +1,110 @@
+$color1: #0099f7;
+$color2: #8e58d3;
+$color3: #f2492b;
+body{
+  margin: 0%;
+  overflow: hidden;
+  font-family: "Lucida Console", Monaco, monospace;
+}
+.container{
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.pickerContainer{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 75px 60px;
+  border-radius: 25px;
+  background: #fff;
+  -webkit-box-shadow: 0px 5px 50px 0px rgba(25,22,31,0.5);
+  -moz-box-shadow: 0px 5px 50px 0px rgba(25,22,31,0.5);
+  box-shadow: 0px 5px 50px 0px rgba(25,22,31,0.5);
+}
+.color{
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+.color div{
+  width: 50px;
+  height: 50px;
+  -webkit-box-shadow: 0px 2px 13px 0px rgba(25,22,31,0.15);
+  -moz-box-shadow: 0px 2px 13px 0px rgba(25,22,31,0.15);
+  box-shadow: 0px 2px 13px 0px rgba(25,22,31,0.15);
+}
+
+h1, p, p a{
+  font-weight: 300;
+  color: #282828;  
+  letter-spacing: 1px;
+}
+p, p a{
+  color: rgba(#fff, 0.75);
+  text-decoration: none;
+  font-size: 12px;
+}
+p{
+  opacity: 0.8;
+  margin-top: 25px;
+}
+a{
+  border-bottom: 1px rgba(#fff, 0.5) solid;
+  transition: color 0.25s;
+  &:hover{
+    color: #fff
+  }
+}
+.color h1{
+   font-size: 25px;
+}
+
+.gradient{
+  width: 500px;
+  height: 30px;
+  position: relative;
+  -webkit-box-shadow: 0px 2px 13px 0px rgba(25,22,31,0.15);
+  -moz-box-shadow: 0px 2px 13px 0px rgba(25,22,31,0.15);
+  box-shadow: 0px 2px 13px 0px rgba(25,22,31,0.15);
+  margin-bottom: 30px;
+}
+
+.background{
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: $color1;
+  background: -moz-linear-gradient(0deg, $color1 0%,  $color2  50%,  $color3 100%);
+  background: -webkit-linear-gradient(0deg, $color1 0%, $color2  50%, $color3 100%);
+  background: linear-gradient(90deg, $color1 0%, $color2 50%, $color3 100%);
+   z-index: 1;
+}
+.selectorContainer{
+  z-index: 5;
+  top: -6px;
+}
+.selector{
+  cursor: ew-resize;
+  width: 3px;
+  height: 40px;
+  background: #282828;
+  z-index: 2
+}
+.pos {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.pos h1{
+  font-size: 12px;
+}
